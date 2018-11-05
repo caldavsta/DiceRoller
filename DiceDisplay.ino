@@ -1,7 +1,3 @@
-//DICE CONFIGS
-int dice[] = { 2, 4, 6, 8, 10, 12, 20 };
-int dice_length = sizeof(dice) / sizeof(dice[0]);
-
 void drawDiceSelection()
 {
 	u8g.setFontPosCenter();
@@ -30,7 +26,7 @@ void drawDiceSelection()
 
 		}
 
-		u8g.drawStr((WIDTH/dice_length) * i + 3, y + DICE_SELECT_HEIGHT / 2 + 4, String(dice[i]).c_str());
+		u8g.drawStr((WIDTH/dice_length) * i + 3, y + DICE_SELECT_HEIGHT / 2 + 2, String(dice[i]).c_str());
 		x += WIDTH / dice_length;
 		 
 	}
@@ -38,6 +34,11 @@ void drawDiceSelection()
 
 }
 
+/*
+	reads the analog value from the potentiometer, determines which dice size
+	is selected based on this value, plays a sound if the selected dice
+	is different from what it was previously
+*/
 void updateDiceSelectionFromPot()
 {
 	//calculate which of the selection is selected
@@ -88,6 +89,6 @@ void drawDiceText()
 	u8g.setFont(LARGE_FONT);
 	String diceString = "D" + String(diceSelection);
 	//Serial.println(diceString);
-	u8g.drawStr(-2, HEIGHT/2+11, diceString.c_str());
+	u8g.drawStr(-2, HEIGHT/2, diceString.c_str());
 
 }

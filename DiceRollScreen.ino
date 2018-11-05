@@ -92,42 +92,68 @@ int getLastRollResult()
 	int result = 0;
 	for (int dice = 0; dice < MAX_DICE; dice++)
 	{
-		result += rolls[rolls_amount-1][dice];
+		result += rolls[rolls_amount - 1][dice];
 	}
 	return result;
 }
 
 void drawRollResult()
 {
+	//draw the large number total in the middle
 	u8g.setFontPosCenter();
 	u8g.setFont(LARGE_FONT);
 
 	u8g.drawStr(WIDTH / 2 - 10, HEIGHT / 2, String(getLastRollResult()).c_str());
 
-	//mini history
+	//draw the mini history that shows each dice roll
 	u8g.setFont(SMALL_FONT);
 	const int font_height = 8;
 	const int font_width = 5;
 	const int vertical_spacing = 1;
-	const int horizontal_spacing = 3;
+	const int horizontal_spacing = 1;
 	const int total_x = 108;
-	int x = 0, y = 45;
-	int roll = 0;
+	int x = 0, y = font_height;
+	int roll = rolls_amount-1;
 	int total = 0;
-	for (int dice = 0; dice < MAX_DICE; dice++)
-	{
-		if (!rolls[roll][dice] == 0)// if the current dice isn't empty
+	if (diceAmount > 1) {
+		for (int dice = 0; dice < MAX_DICE; dice++)
 		{
-			total += rolls[roll][dice];
-			u8g.drawStr(x, y, String(rolls[roll][dice]).c_str());
-			x += (font_width * 2) + horizontal_spacing;
-		}
-	}
-	String totalString = "=" + String(total);
+			if (x > WIDTH - font_width + horizontal_spacing)
+			{
+				x = 0;
+				y += vertical_spacing + font_height;
+			}
 
-	u8g.drawStr(total_x, y, totalString.c_str());
-	y += font_height + vertical_spacing;
+			if (!rolls[roll][dice] == 0)// if the current dice isn't empty
+			{
+				total += rolls[roll][dice];
+				// draw the roll
+				u8g.drawStr(x, y, String(rolls[roll][dice]).c_str());
+				// add spacing afterward
+				if (rolls[roll][dice] < 10)
+				{
+					x += (font_width)+horizontal_spacing;
+				}
+				else
+				{
+					x += (font_width * 2) + horizontal_spacing;
+				}
+				//draw the '+'
+				if (dice < diceAmount - 1)
+				{
+					u8g.drawStr(x, y, "+");
+					x += (font_width)+horizontal_spacing;
+				}
+
+			}
+		}
+		u8g.drawStr(x, y, "=");
+		x += (font_width * 2) + horizontal_spacing;
+	}
+	
+
 }
+
 
 void drawIndividualDiceRolls()
 {

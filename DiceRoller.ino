@@ -57,6 +57,10 @@ int currentScreen = SCREEN_DICE_SELECT;
 int rolls[MAX_ROLLS_HISTORY][MAX_DICE];
 int rolls_amount = 0;
 
+//DICE CONFIGS
+int dice[] = { 2, 4, 6, 8, 10, 12, 20 };
+int dice_length = sizeof(dice) / sizeof(dice[0]);
+
 //debugging
 bool occasionalDebug = false;
 float debugFrequency = 0;
@@ -77,7 +81,6 @@ void updateDiceAmountFromPot();
 void drawDiceAmount();
 void drawDiceText();
 void drawDiceHistory();
-void drawRollResult();
 int getLastRollResult();
 void playMelody(int* melody, int* noteDurations);
 void draw();
@@ -157,8 +160,11 @@ void loop()
 		}
 		break;
 	case SCREEN_ROLL_RESULT:
+
+		// played gets set to true again when user navigates from this screen
 		static bool played = false;
-		if (diceSelection == 20 && !played)
+
+		if (diceSelection == 20 && !played && diceAmount == 1)
 		{ 
 				if (getLastRollResult() == 20)
 				{
@@ -227,7 +233,7 @@ void outputAverageFrameRate()
 		Serial.print(timeSince);
 		Serial.println(" Resetting Display");
 		Serial.print(" Free Mem: ");
-		Serial.println(freeMemory());
+		//Serial.println(freeMemory());
 		playMelody(errorMelody, errorNoteDurations);
 
 		//u8g.sleepOff();
@@ -263,7 +269,7 @@ void draw()
 		case SCREEN_DEBUG:
 			u8g.setFontPosTop();
 			u8g.drawStr(0,0,String(debugFrequency).c_str());
-			u8g.drawStr(0, 20, String(freeMemory()).c_str());
+			//u8g.drawStr(0, 20, String(freeMemory()).c_str());
 			drawMenuButtons("Play", "Back", 10, 10);
 			break;
 	
